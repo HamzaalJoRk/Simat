@@ -77,15 +77,17 @@
                                 <td>{{ $insurance->duration }}</td>
                                 <td>{{ number_format($insurance->amount_numeric, 2) }}</td>
                                 <td>{{ $insurance->notes ?? 'لا يوجد' }}</td>
-                                <td>
-                                    <a href="{{ route('insurances.edit', $insurance) }}" class="btn btn-sm btn-warning">تعديل</a>
-                                    <form action="{{ route('insurances.destroy', $insurance) }}" method="POST" class="d-inline"
-                                          onsubmit="return confirm('هل أنت متأكد من الحذف؟');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button class="btn btn-sm btn-danger">حذف</button>
-                                    </form>
-                                </td>
+                                @if (auth()->user()->hasRole('Super Admin'))
+                                    <td>
+                                        <a href="{{ route('insurances.edit', $insurance) }}" class="btn btn-sm btn-warning">تعديل</a>
+                                        <form action="{{ route('insurances.destroy', $insurance) }}" method="POST" class="d-inline"
+                                            onsubmit="return confirm('هل أنت متأكد من الحذف؟');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button class="btn btn-sm btn-danger">حذف</button>
+                                        </form>
+                                    </td>
+                                @endif
                             </tr>
                         @endforeach
                     </tbody>

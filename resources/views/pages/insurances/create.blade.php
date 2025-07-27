@@ -9,6 +9,7 @@
             </div>
         @endif
 
+
         <form action="{{ route('insurances.store') }}" method="POST" id="insurance-form">
             @csrf
             <div class="row mb-2">
@@ -84,6 +85,24 @@
             </div>
         </form>
     </div>
+
+    @if (session('print_id'))
+        <script>
+            window.addEventListener('DOMContentLoaded', function () {
+                if (localStorage.getItem('open_receipt') === 'yes') {
+                    localStorage.removeItem('open_receipt');
+                    window.open("{{ route('insurances.receipt', session('print_id')) }}");
+                }
+            });
+        </script>
+    @endif
+
+    <script>
+        document.getElementById('insurance-form').addEventListener('submit', function () {
+            localStorage.setItem('open_receipt', 'yes');
+        });
+    </script>
+
 
     <script>
         const fees = {

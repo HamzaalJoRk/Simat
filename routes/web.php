@@ -117,6 +117,7 @@ Route::middleware(['auth']) // Implement admin middleware to restrict access
             Route::get('/{id}/edit', [InsuranceController::class, 'edit'])->name('edit');
             Route::put('/{id}', [InsuranceController::class, 'update'])->name('update');
             Route::delete('/{id}', [InsuranceController::class, 'destroy'])->name('destroy');
+            Route::get('/{id}/receipt', [InsuranceController::class, 'printReceipt'])->name('receipt');
         });
     });
 //Route::get('/users', [UserController::class, 'index'])->name('users.index');

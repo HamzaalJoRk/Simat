@@ -37,7 +37,7 @@ class RoleAndPermissionSeeder extends Seeder
 
         $superAdmin = User::updateOrCreate(
             ['email' => 'admin@naseeb.com'],
-            ['name' => 'Super Admin', 'password' => Hash::make('password')]
+            ['name' => 'Super Admin', 'password' => Hash::make('simatnaseeb')]
         );
         $superAdmin->assignRole($superAdminRole);
     }

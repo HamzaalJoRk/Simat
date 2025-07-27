@@ -13,6 +13,7 @@ class Insurance extends Model
         'chassis_number',
         'plate_number',
         'start_date',
+        'serial_number',
         'end_date',
         'duration',
         'amount_numeric',

@@ -10,6 +10,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use Carbon\Carbon;
 use NumberFormatter;
+use NumberToWords\NumberToWords;
 
 class SimatController extends Controller
 {
@@ -66,37 +67,68 @@ class SimatController extends Controller
 
 
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
-        // dd($request->all());
         try {
             $data = $request->validate([
                 'name' => 'required|string|max:255',
                 'mother_name' => 'nullable|string|max:255',
                 'birth_date' => 'nullable|string|max:255',
                 'passport_number' => 'required|string|max:255|unique:simats',
-                'entry_date' => 'required|string',
                 'visa_type' => 'required|string|max:255',
                 'country_code' => 'nullable|string',
                 'labor_fee' => 'nullable|numeric',
                 'nationality' => 'nullable|string',
             ]);
-
+            $data['entry_date'] = now();
             $fee = Fee::findOrFail($request->fee_id);
+            $duration = $fee->duration;
 
+            switch ($duration) {
+                case '15 يوم':
+                    $data['country_code'] = 9;
+                    break;
+                case 'شهر':
+                    $data['country_code'] = 28;
+                    break;
+                case 'ثلاثة أشهر':
+                    $data['country_code'] = 14;
+                    break;
+                case 'ستة أشهر':
+                    $data['country_code'] = 10;
+                    break;
+                case 'مجاني':
+                    $data['country_code'] = 45;
+                    break;
+                default:
+                    $data['country_code'] = null;
+                    break;
+            }
             $data['fee_number'] = $fee->amount;
             $data['validity_duration'] = $fee->duration;
             $data['fee_text'] = $fee->amount;
 
-            Simat::create($data);
+            $simat = Simat::create($data);
 
-            return to_route('simats.index')->with('success', 'تمت الإضافة بنجاح');
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'id' => $simat->id,
+                    'message' => 'تمت الإضافة بنجاح'
+                ]);
+            }
+
+            return redirect()->route('simats.create')->with('print_id', $simat->id);
         } catch (\Exception $e) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'حدث خطأ أثناء الحفظ: ' . $e->getMessage()
+                ]);
+            }
             return back()->withInput()->with('error', 'حدث خطأ أثناء الحفظ: ' . $e->getMessage());
         }
     }
-
-
 
 
     public function show(Simat $simat): View

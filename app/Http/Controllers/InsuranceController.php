@@ -15,6 +15,13 @@ class InsuranceController extends Controller
         return view('pages.insurances.index', compact('insurances'));
     }
 
+    public function printReceipt($id)
+    {
+        $insurance = Insurance::findOrFail($id);
+        return view('pages.insurances.receipt', compact('insurance'));
+    }
+
+
     public function create()
     {
         return view('pages.insurances.create');
@@ -42,7 +49,7 @@ class InsuranceController extends Controller
             $endDate = $startDate->copy()->addDays($request->duration);
 
             // إنشاء التأمين مع تعديل end_date
-            Insurance::create([
+            $insurance = Insurance::create([
                 'name' => $request->name,
                 'vehicle_type' => $request->vehicle_type,
                 'model' => $request->model,
@@ -56,7 +63,7 @@ class InsuranceController extends Controller
                 'notes' => $request->notes,
             ]);
 
-            return redirect()->route('insurances.index')->with('success', 'تمت الإضافة بنجاح');
+            return redirect()->route('insurances.create')->with('print_id', $insurance->id);
         } catch (\Exception $e) {
             // في حالة حدوث أي خطأ
             return redirect()->back()->withInput()->with('error', 'حدث خطأ: ' . $e->getMessage());

@@ -132,7 +132,7 @@
                 </tr>
                 <tr>
                     <td>الاسم الثلاثي / Full Name</td>
-                    <td>{{ $simat->visa_type }}</td>
+                    <td>{{ $simat->name }}</td>
                     <td>رقم جواز السفر / Passport Number</td>
                     <td>{{ $simat->passport_number }}</td>
                 </tr>
@@ -151,18 +151,22 @@
                 <tr>
                     <td>تاريخ الميلاد / Birth Date</td>
                     <td>{{ $simat->birth_date }}</td>
-                    <td>رمز الدولة / Country Code</td>
-                    <td>{{ $simat->validity_duration }}</td>
+                    <td>رسوم العمالة</td>
+                    <td>{{ $simat->labor_fee ? $simat->labor_fee : 0  }} $</td>
                 </tr>
                 <tr>
-                    <td>الرسوم رقماً / Fees</td>
+                    <td>رسوم السمة / Fees</td>
                     <td>{{ $simat->fee_number }} $</td>
                     <td>رمزها</td>
                     <td>{{ $simat->country_code }}</td>
                 </tr>
                 <tr>
-                    <td>الرسوم كتابةً </td>
-                    <td colspan="3">{{ $simat->fee_number }} $</td>
+                    <td>الاجمالي رقماََ </td>
+                    <td colspan="3">{{ $total }} $</td>
+                </tr>
+                <tr>
+                    <td>الاجمالي كتابةً </td>
+                    <td colspan="3">{{ $totalInWords }} دولاراََ فقط لا غير</td>
                 </tr>
             </table>
 
@@ -185,7 +189,8 @@
             const day = String(today.getDate()).padStart(2, '0');
             const month = String(today.getMonth() + 1).padStart(2, '0');
             const year = today.getFullYear();
-            return `${day}/${month}/${year}`;
+            const time = today.toLocaleTimeString('en-EG');
+            return `${day}/${month}/${year} - ${time}`;
         })();
 
         document.querySelectorAll('.today-date').forEach(el => {
