@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->string('nationality');
             $table->string('serial_number');
             $table->string('birth_date');
-            $table->string('passport_number')->unique();
+            $table->string('passport_number');
             $table->string('entry_date');
             $table->string(column: 'visa_type');
             $table->string('validity_duration');

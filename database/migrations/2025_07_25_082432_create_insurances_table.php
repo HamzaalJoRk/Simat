@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('name'); 
             $table->string('vehicle_type'); 
             $table->string('model'); 
-            $table->string('chassis_number')->unique(); 
-            $table->string('plate_number')->unique(); 
+            $table->string('chassis_number'); 
+            $table->string('plate_number'); 
             $table->date('start_date');
             $table->date('end_date'); 
             $table->string('duration'); 

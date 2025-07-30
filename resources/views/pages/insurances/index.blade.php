@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="container">
-        <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="d-flex justify-content-between align-items-center mb-1">
             <h2 class="fw-bold">سجل التأمينات</h2>
             <div>
                 <a href="{{ route('insurances.create') }}" class="btn btn-primary">
@@ -16,24 +16,46 @@
             </div>
         </div>
 
-        <div class="row mb-3">
+        <div class="row mb-1">
             <div class="col-md-6">
                 <div class="card text-white bg-info shadow-sm">
                     <div class="card-body">
-                        <h5 class="card-title">عدد التأمينات</h5>
-                        <h3 class="card-text fw-bold">{{ $insurances->count() }}</h3>
+                        <h5 class="card-title text-white">عدد التأمينات</h5>
+                        <h3 class="card-text text-white fw-bold">{{ $insurances->count() }}</h3>
                     </div>
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="card text-white bg-success shadow-sm">
+                <div class="card  bg-success shadow-sm">
                     <div class="card-body">
-                        <h5 class="card-title">إجمالي الرسوم</h5>
-                        <h3 class="card-text fw-bold">{{ number_format($insurances->sum('amount_numeric'), 2) }} $</h3>
+                        <h5 class="card-title text-white">إجمالي الرسوم</h5>
+                        <h3 class="card-text text-white fw-bold">{{ number_format($insurances->sum('amount_numeric'), 2) }} $</h3>
                     </div>
                 </div>
             </div>
         </div>
+
+        @php
+            $today = \Carbon\Carbon::now()->format('Y-m-d');
+        @endphp
+
+        <form method="GET" action="{{ route('insurances.index') }}" class="row mb-1">
+            <div class="col-md-4">
+                <label for="from_date">من تاريخ:</label>
+                <input type="date" name="from_date" id="from_date" class="form-control"
+                    value="{{ old('from_date', $fromDate->toDateString()) }}">
+            </div>
+            <div class="col-md-4">
+                <label for="to_date">إلى تاريخ:</label>
+                <input type="date" name="to_date" id="to_date" class="form-control"
+                    value="{{ old('to_date', $toDate->toDateString()) }}">
+            </div>
+            <div class="col-md-4 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary me-2">بحث</button>
+                <a href="{{ route('insurances.index') }}" class="btn btn-secondary">إعادة تعيين</a>
+            </div>
+        </form>
+
 
         @if($insurances->count())
             <div class="table-responsive">
@@ -51,7 +73,9 @@
                             <th>المدة</th>
                             <th>الرسم</th>
                             <th>ملاحظات</th>
-                            <th>خيارات</th>
+                            @if (auth()->user()->hasRole('Super Admin'))
+                                <th>خيارات</th>
+                            @endif
                         </tr>
                     </thead>
                     <thead class="filters">
@@ -123,8 +147,22 @@
                         exportOptions: {
                             columns: ':not(:last-child)' // لا تصدّر عمود "خيارات"
                         },
-                        filename: 'قائمة_التأمينات',
-                        title: 'قائمة التأمينات'
+                        filename: 'قائمة_السمات_' + new Date().toLocaleDateString('en-EG'),
+                        title: '',
+                        customize: function (xlsx) {
+                            let sheet = xlsx.xl.worksheets['sheet1.xml'];
+
+                            // إضافة صف يحتوي على التاريخ في الأعلى
+                            let date = new Date().toLocaleDateString('ar-EG');
+                            let dateRow =
+                                `<row r="1">
+                                                <c t="inlineStr" r="A1">
+                                                    <is><t>تاريخ التصدير: ${date}</t></is>
+                                                </c>
+                                            </row>`;
+
+                            sheet.childNodes[0].innerHTML = dateRow + sheet.childNodes[0].innerHTML;
+                        }
                     }
                 ],
                 orderCellsTop: true,

@@ -9,11 +9,27 @@ use Carbon\Carbon;
 
 class InsuranceController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $insurances = Insurance::all();
-        return view('pages.insurances.index', compact('insurances'));
+        $query = Insurance::query();
+
+        if ($request->filled('from_date') && $request->filled('to_date')) {
+            $fromDate = Carbon::parse($request->from_date)->startOfDay();
+            $toDate = Carbon::parse($request->to_date)->endOfDay();
+        } else {
+            $fromDate = Carbon::today()->startOfDay();
+            $toDate = Carbon::today()->endOfDay();
+        }
+
+        // فلترة بين التاريخين
+        $query->whereBetween('created_at', [$fromDate, $toDate]);
+
+        $insurances = $query->orderBy('created_at', 'desc')->get();
+
+        return view('pages.insurances.index', compact('insurances', 'fromDate', 'toDate'));
+
     }
+
 
     public function printReceipt($id)
     {

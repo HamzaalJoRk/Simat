@@ -20,22 +20,26 @@ class SimatController extends Controller
     {
         $query = Simat::query();
 
-        // فلترة حسب تاريخ اليوم فقط
         if ($request->filled('today') && $request->today == '1') {
             $query->whereDate('created_at', Carbon::today());
         }
 
-        // فلترة بين تاريخين
         if ($request->filled('from_date') && $request->filled('to_date')) {
             $query->whereBetween('created_at', [
-                Carbon::parse($request->from_date)->startOfDay(),
-                Carbon::parse($request->to_date)->endOfDay()
+                $fromDate = Carbon::parse($request->from_date)->startOfDay(),
+                $toDate = Carbon::parse($request->to_date)->endOfDay()
             ]);
+        } else {
+            $fromDate = Carbon::today()->startOfDay();
+            $toDate = Carbon::today()->endOfDay();
         }
 
-        $simats = $query->get();
+        $query->whereBetween('created_at', [$fromDate, $toDate]);
 
-        return view('pages.simats.index', compact('simats'));
+        $simats = $query->orderBy('created_at', 'desc')->get();
+
+
+        return view('pages.simats.index', compact('simats', 'fromDate', 'toDate'));
     }
 
 
@@ -74,15 +78,38 @@ class SimatController extends Controller
                 'name' => 'required|string|max:255',
                 'mother_name' => 'nullable|string|max:255',
                 'birth_date' => 'nullable|string|max:255',
-                'passport_number' => 'required|string|max:255|unique:simats',
+                'passport_number' => 'required|string|max:255',
                 'visa_type' => 'required|string|max:255',
                 'country_code' => 'nullable|string',
                 'labor_fee' => 'nullable|numeric',
                 'nationality' => 'nullable|string',
             ]);
-            $data['entry_date'] = now();
+
+            $nationality = Nationality::findOrFail($data['nationality']);
             $fee = Fee::findOrFail($request->fee_id);
             $duration = $fee->duration;
+
+            $existingRecords = Simat::where('passport_number', $request->passport_number)->get();
+
+
+            foreach ($existingRecords as $existing) {
+                if ($existing->validity_duration === '3 أشهر' && $duration === '3 أشهر') {
+                    return back()->withInput()->with('error', 'هذا الجواز مسجل مسبقاً وهو من فئة 3 أشهر');
+                } elseif ($existing->validity_duration === '6 أشهر' && $duration === '6 أشهر') {
+                    $createdDate = Carbon::parse($existing->created_at);
+                    $now = Carbon::now();
+
+                    $daysPassed = $createdDate->diffInDays($now);
+                    $daysRequired = 182;
+                    $daysRemaining = $daysRequired - $daysPassed;
+
+                    if ($daysPassed < $daysRequired) {
+                        return back()->withInput()->with('error', 'هذا الجواز مسجل مسبقاً وهو من فئة 6 أشهر يجب الانتظار حتى انتهاء المدة لتجديده');
+                    }
+                }
+            }
+
+            $data['entry_date'] = now();
 
             switch ($duration) {
                 case '15 يوم':
@@ -91,10 +118,10 @@ class SimatController extends Controller
                 case 'شهر':
                     $data['country_code'] = 28;
                     break;
-                case 'ثلاثة أشهر':
+                case '3 أشهر':
                     $data['country_code'] = 14;
                     break;
-                case 'ستة أشهر':
+                case '6 أشهر':
                     $data['country_code'] = 10;
                     break;
                 case 'مجاني':
@@ -104,9 +131,11 @@ class SimatController extends Controller
                     $data['country_code'] = null;
                     break;
             }
+
             $data['fee_number'] = $fee->amount;
-            $data['validity_duration'] = $fee->duration;
+            $data['validity_duration'] = $duration;
             $data['fee_text'] = $fee->amount;
+            $data['nationality'] = $nationality->name;
 
             $simat = Simat::create($data);
 
@@ -129,6 +158,8 @@ class SimatController extends Controller
             return back()->withInput()->with('error', 'حدث خطأ أثناء الحفظ: ' . $e->getMessage());
         }
     }
+
+
 
 
     public function show(Simat $simat): View
@@ -154,7 +185,7 @@ class SimatController extends Controller
                 'name' => 'required|string|max:255',
                 'mother_name' => 'nullable|string|max:255',
                 'birth_date' => 'nullable|string|max:255',
-                'passport_number' => 'required|string|max:255|unique:simats,passport_number,' . $simat->id,
+                'passport_number' => 'required|string|max:255',
                 'entry_date' => 'required|string',
                 'visa_type' => 'required|string|max:255',
                 'country_code' => 'nullable|string',

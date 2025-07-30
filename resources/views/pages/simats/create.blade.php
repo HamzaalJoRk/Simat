@@ -141,19 +141,19 @@
                 </script>
 
                 <!-- <div class="col-md-4 mb-2 position-relative">
-                                            <label>الجنسية:</label>
-                                            <input type="text" id="nationalitySearchInput" class="form-control" placeholder="ابحث عن الجنسية..."
-                                                autocomplete="off">
-                                            <input type="hidden" name="nationality" id="selectedNationalityName" value="{{ old('nationality') }}">
-                                            <input type="hidden" id="selectedNationalityId" value="{{ old('nationality_id') }}">
+                                                                <label>الجنسية:</label>
+                                                                <input type="text" id="nationalitySearchInput" class="form-control" placeholder="ابحث عن الجنسية..."
+                                                                    autocomplete="off">
+                                                                <input type="hidden" name="nationality" id="selectedNationalityName" value="{{ old('nationality') }}">
+                                                                <input type="hidden" id="selectedNationalityId" value="{{ old('nationality_id') }}">
 
-                                            <ul id="nationalityList" class="list-group position-absolute w-100"
-                                                style="z-index: 1000; max-height: 200px; overflow-y: auto; display: none;">
-                                                @foreach($nationalities as $id => $name)
-                                                    <li class="list-group-item nationality-item" data-id="{{ $id }}" tabindex="0">{{ $name }}</li>
-                                                @endforeach
-                                            </ul>
-                                        </div> -->
+                                                                <ul id="nationalityList" class="list-group position-absolute w-100"
+                                                                    style="z-index: 1000; max-height: 200px; overflow-y: auto; display: none;">
+                                                                    @foreach($nationalities as $id => $name)
+                                                                        <li class="list-group-item nationality-item" data-id="{{ $id }}" tabindex="0">{{ $name }}</li>
+                                                                    @endforeach
+                                                                </ul>
+                                                            </div> -->
 
                 <div class="col-md-4 mb-2">
                     <label>نوع السمة:</label>
@@ -181,7 +181,7 @@
         </form>
     </div>
 
-    @if (session('print_id'))
+    @if (!session('error') && session('print_id'))
         <form id="receiptForm" action="{{ route('simats.receipt', session('print_id')) }}" method="GET" target="_blank"
             style="display: none;"></form>
         <script>window.onload = () => document.getElementById('receiptForm').submit();</script>
@@ -222,12 +222,24 @@
                     if (filtered.length > 0) {
                         feeSelect.disabled = false;
                         filtered.forEach(fee => {
+                            let entryText = '';
+
+                            // تحديد نوع الدخول بناءً على المدة
+                            if (fee.duration === '15 يوم' || fee.duration === 'شهر') {
+                                entryText = ' (دخول واحد)';
+                            } else if (fee.duration === '3 أشهر') {
+                                entryText = ' (دخول مرتين)';
+                            } else if (fee.duration === '6 أشهر') {
+                                entryText = ' (دخول متعدد)';
+                            }
+
                             let option = document.createElement('option');
                             option.value = fee.id;
-                            option.textContent = `${fee.type} - ${fee.duration} - ${parseFloat(fee.amount).toFixed(2)}`;
+                            option.textContent = `${fee.type} - ${fee.duration}${entryText} - ${parseFloat(fee.amount).toFixed(2)}`;
                             if (oldFeeId && oldFeeId == fee.id) option.selected = true;
                             feeSelect.appendChild(option);
                         });
+
                     } else {
                         feeSelect.disabled = true;
                         feeSelect.innerHTML = '<option value="">لا توجد رسوم متاحة</option>';
