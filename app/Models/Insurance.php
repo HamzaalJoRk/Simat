@@ -38,7 +38,7 @@ class Insurance extends Model
     {
         $latest = self::latest('id')->first();
         $nextId = $latest ? $latest->id + 1 : 1;
-        $startFrom = 1000;
+        $startFrom = 1903;
         $serial = $startFrom + $nextId - 1;
         return str_pad($serial, 6, '0', STR_PAD_LEFT);
     }
