@@ -141,19 +141,19 @@
                 </script>
 
                 <!-- <div class="col-md-4 mb-2 position-relative">
-                                                                <label>الجنسية:</label>
-                                                                <input type="text" id="nationalitySearchInput" class="form-control" placeholder="ابحث عن الجنسية..."
-                                                                    autocomplete="off">
-                                                                <input type="hidden" name="nationality" id="selectedNationalityName" value="{{ old('nationality') }}">
-                                                                <input type="hidden" id="selectedNationalityId" value="{{ old('nationality_id') }}">
+                                                                    <label>الجنسية:</label>
+                                                                    <input type="text" id="nationalitySearchInput" class="form-control" placeholder="ابحث عن الجنسية..."
+                                                                        autocomplete="off">
+                                                                    <input type="hidden" name="nationality" id="selectedNationalityName" value="{{ old('nationality') }}">
+                                                                    <input type="hidden" id="selectedNationalityId" value="{{ old('nationality_id') }}">
 
-                                                                <ul id="nationalityList" class="list-group position-absolute w-100"
-                                                                    style="z-index: 1000; max-height: 200px; overflow-y: auto; display: none;">
-                                                                    @foreach($nationalities as $id => $name)
-                                                                        <li class="list-group-item nationality-item" data-id="{{ $id }}" tabindex="0">{{ $name }}</li>
-                                                                    @endforeach
-                                                                </ul>
-                                                            </div> -->
+                                                                    <ul id="nationalityList" class="list-group position-absolute w-100"
+                                                                        style="z-index: 1000; max-height: 200px; overflow-y: auto; display: none;">
+                                                                        @foreach($nationalities as $id => $name)
+                                                                            <li class="list-group-item nationality-item" data-id="{{ $id }}" tabindex="0">{{ $name }}</li>
+                                                                        @endforeach
+                                                                    </ul>
+                                                                </div> -->
 
                 <div class="col-md-4 mb-2">
                     <label>نوع السمة:</label>
@@ -262,4 +262,15 @@
             }
         });
     </script>
+
+    <script>
+        document.getElementById('simat-form').addEventListener('submit', function () {
+            const submitButton = this.querySelector('button[type="submit"]');
+            if (submitButton) {
+                submitButton.disabled = true;
+                submitButton.innerText = 'جاري الإضافة...';
+            }
+        });
+    </script>
+
 @endsection

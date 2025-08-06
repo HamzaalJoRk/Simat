@@ -98,11 +98,16 @@
     @endif
 
     <script>
-        document.getElementById('insurance-form').addEventListener('submit', function () {
+        document.getElementById('insurance-form').addEventListener('submit', function (e) {
             localStorage.setItem('open_receipt', 'yes');
+
+            const submitButton = this.querySelector('button[type="submit"]');
+            if (submitButton) {
+                submitButton.disabled = true;
+                submitButton.innerText = 'جاري الحفظ...';
+            }
         });
     </script>
-
 
     <script>
         const fees = {
