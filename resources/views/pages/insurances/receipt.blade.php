@@ -139,7 +139,7 @@
                 </tr>
                 <tr>
                     <td>نوع الآلية</td>
-                    <td>{{ $insurance->vehicle_type }} يوم</td>
+                    <td>{{ $insurance->vehicle_type }}</td>
                     <td>مدة التأمين</td>
                     <td>{{ $insurance->duration }} يوم</td>
                 </tr>
@@ -147,7 +147,7 @@
                     <td>تاريخ البداية</td>
                     <td>{{ $insurance->start_date }}</td>
                     <td>تاريخ النهاية</td>
-                    <td>{{ $insurance->end_date }} يوم</td>
+                    <td>{{ $insurance->end_date }}</td>
                 </tr>
                 <tr>
                     <td>الرسوم رقماً</td>

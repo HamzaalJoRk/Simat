@@ -104,8 +104,12 @@
                                 <td>{{ $insurance->duration }}</td>
                                 <td>{{ number_format($insurance->amount_numeric, 2) }}</td>
                                 <td>{{ $insurance->notes ?? 'لا يوجد' }}</td>
-                                @if (auth()->user()->hasRole('Super Admin'))
-                                    <td>
+                                <td>
+                                    <a href="{{ route('insurances.receipt', $simat->id) }}" target="_blank"
+                                        class="btn btn-sm btn-secondary mt-1">
+                                        طباعة إيصال
+                                    </a>
+                                    @if (auth()->user()->hasRole('Super Admin') || auth()->user()->hasRole('Admin'))
                                         <a href="{{ route('insurances.edit', $insurance) }}" class="btn btn-sm btn-warning">تعديل</a>
                                         <form action="{{ route('insurances.destroy', $insurance) }}" method="POST" class="d-inline"
                                             onsubmit="return confirm('هل أنت متأكد من الحذف؟');">
@@ -113,8 +117,8 @@
                                             @method('DELETE')
                                             <button class="btn btn-sm btn-danger">حذف</button>
                                         </form>
-                                    </td>
-                                @endif
+                                    @endif
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -159,10 +163,10 @@
                             let date = new Date().toLocaleDateString('ar-EG');
                             let dateRow =
                                 `<row r="1">
-                                                    <c t="inlineStr" r="A1">
-                                                        <is><t>تاريخ التصدير: ${date}</t></is>
-                                                    </c>
-                                                </row>`;
+                                                        <c t="inlineStr" r="A1">
+                                                            <is><t>تاريخ التصدير: ${date}</t></is>
+                                                        </c>
+                                                    </row>`;
 
                             sheet.childNodes[0].innerHTML = dateRow + sheet.childNodes[0].innerHTML;
                         }
