@@ -76,9 +76,7 @@
                             <th>المدة</th>
                             <th>الرسم</th>
                             <th>ملاحظات</th>
-                            @if (auth()->user()->hasRole('Super Admin'))
-                                <th>خيارات</th>
-                            @endif
+                            <th>خيارات</th>
                         </tr>
                     </thead>
                     <thead class="filters">
@@ -163,10 +161,10 @@
                             let date = new Date().toLocaleDateString('ar-EG');
                             let dateRow =
                                 `<row r="1">
-                                                        <c t="inlineStr" r="A1">
-                                                            <is><t>تاريخ التصدير: ${date}</t></is>
-                                                        </c>
-                                                    </row>`;
+                                                            <c t="inlineStr" r="A1">
+                                                                <is><t>تاريخ التصدير: ${date}</t></is>
+                                                            </c>
+                                                        </row>`;
 
                             sheet.childNodes[0].innerHTML = dateRow + sheet.childNodes[0].innerHTML;
                         }
