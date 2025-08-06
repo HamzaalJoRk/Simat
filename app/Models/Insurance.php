@@ -18,6 +18,7 @@ class Insurance extends Model
         'duration',
         'amount_numeric',
         'amount_written',
+        'type',
         'notes'
     ];
 

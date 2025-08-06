@@ -34,8 +34,12 @@ Route::get('/', function () {
         return redirect('/dashboard');
     } elseif (auth()->user()->hasRole('Simats')) {
         return redirect('/simats');
-    } else {
-        return redirect('/insurances');
+    } elseif (auth()->user()->hasRole('Cargo Insurance')) {
+        return redirect('/insurances/cargo');
+    } elseif (auth()->user()->hasRole('Tourist Insurance')) {
+        return redirect('/insurances/tourist');
+    } elseif (auth()->user()->hasRole('Admin')) {
+        return redirect('/simats');
     }
 })->middleware('auth');
 
@@ -110,7 +114,9 @@ Route::middleware(['auth']) // Implement admin middleware to restrict access
         });
 
         Route::prefix('insurances')->name('insurances.')->group(function () {
-            Route::get('/', [InsuranceController::class, 'index'])->name('index');
+            Route::get('/cargo', [InsuranceController::class, 'indexCargo'])->name('indexCargo');
+            Route::get('/tourist', [InsuranceController::class, 'indexTourist'])->name('indexTourist');
+            // Route::get('/', [InsuranceController::class, 'index'])->name('index');
             Route::get('/create', [InsuranceController::class, 'create'])->name('create');
             Route::post('/', [InsuranceController::class, 'store'])->name('store');
             Route::get('/{id}', [InsuranceController::class, 'show'])->name('show');

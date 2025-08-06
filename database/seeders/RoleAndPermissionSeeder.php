@@ -31,7 +31,9 @@ class RoleAndPermissionSeeder extends Seeder
         }
 
         $superAdminRole = Role::updateOrCreate(['name' => 'Super Admin']);
-        $insurancesRole = Role::updateOrCreate(['name' => 'Insurances']);
+        $AdminRole = Role::updateOrCreate(['name' => 'Admin']);
+        $touristInsurancesRole = Role::updateOrCreate(['name' => 'Tourist Insurance']);
+        $cargoInsurancesRole = Role::updateOrCreate(['name' => 'Cargo Insurance']);
         $simatsRole = Role::updateOrCreate(['name' => 'Simats']);
         $superAdminRole->givePermissionTo($permissions);
 

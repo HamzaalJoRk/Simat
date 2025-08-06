@@ -21,12 +21,53 @@ class InsuranceController extends Controller
             $toDate = Carbon::today()->endOfDay();
         }
 
-        // فلترة بين التاريخين
         $query->whereBetween('created_at', [$fromDate, $toDate]);
 
         $insurances = $query->orderBy('created_at', 'desc')->get();
 
         return view('pages.insurances.index', compact('insurances', 'fromDate', 'toDate'));
+
+    }
+    public function indexCargo(Request $request)
+    {
+        $query = Insurance::query();
+
+        if ($request->filled('from_date') && $request->filled('to_date')) {
+            $fromDate = Carbon::parse($request->from_date)->startOfDay();
+            $toDate = Carbon::parse($request->to_date)->endOfDay();
+        } else {
+            $fromDate = Carbon::today()->startOfDay();
+            $toDate = Carbon::today()->endOfDay();
+        }
+
+        $query->whereBetween('created_at', [$fromDate, $toDate]);
+
+        $query->where('type', 'Cargo');
+
+        $insurances = $query->orderBy('created_at', 'desc')->get();
+
+        return view('pages.insurances.Cargo.index', compact('insurances', 'fromDate', 'toDate'));
+    }
+
+    public function indexTourist(Request $request)
+    {
+        $query = Insurance::query();
+
+        if ($request->filled('from_date') && $request->filled('to_date')) {
+            $fromDate = Carbon::parse($request->from_date)->startOfDay();
+            $toDate = Carbon::parse($request->to_date)->endOfDay();
+        } else {
+            $fromDate = Carbon::today()->startOfDay();
+            $toDate = Carbon::today()->endOfDay();
+        }
+
+        $query->whereBetween('created_at', [$fromDate, $toDate]);
+
+        $query->where('type', 'Tourist');
+
+        $insurances = $query->orderBy('created_at', 'desc')->get();
+
+        return view('pages.insurances.Tourist.index', compact('insurances', 'fromDate', 'toDate'));
 
     }
 
@@ -63,8 +104,12 @@ class InsuranceController extends Controller
             // حساب تاريخ النهاية تلقائياً
             $startDate = Carbon::parse($request->start_date);
             $endDate = $startDate->copy()->addDays($request->duration);
+            if (auth()->user()->hasRole('Tourist Insurance')) {
+                $type = 'Tourist';
+            } elseif (auth()->user()->hasRole('Cargo Insurance')) {
+                $type = 'Cargo';
+            }
 
-            // إنشاء التأمين مع تعديل end_date
             $insurance = Insurance::create([
                 'name' => $request->name,
                 'vehicle_type' => $request->vehicle_type,
@@ -73,6 +118,7 @@ class InsuranceController extends Controller
                 'plate_number' => $request->plate_number,
                 'start_date' => $startDate,
                 'end_date' => $endDate,
+                'type' => $type,
                 'duration' => $request->duration,
                 'amount_numeric' => $request->amount_numeric,
                 'amount_written' => $request->amount_numeric,

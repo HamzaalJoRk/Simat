@@ -190,13 +190,40 @@ class SimatController extends Controller
                 'labor_fee' => 'nullable|numeric',
                 'nationality' => 'nullable|string',
                 'fee_id' => 'required|exists:fees,id',
-                'fee_number' => 'required|numeric',
-                'fee_text' => 'required|string',
             ]);
 
             $fee = Fee::findOrFail($data['fee_id']);
+            $duration = $fee->duration;
+
+            switch ($duration) {
+                case '15 يوم':
+                    $data['country_code'] = 9;
+                    break;
+                case 'شهر':
+                    $data['country_code'] = 28;
+                    break;
+                case '3 أشهر':
+                    $data['country_code'] = 14;
+                    break;
+                case '6 أشهر':
+                    $data['country_code'] = 10;
+                    break;
+                case 'مجاني':
+                    $data['country_code'] = 45;
+                    break;
+                default:
+                    $data['country_code'] = null;
+                    break;
+            }
+
+            $nationality = Nationality::find($request->input('selected_nationality_id'));
+            if ($nationality) {
+                $data['nationality'] = $nationality->name;
+            }
+
             $data['fee_number'] = $fee->amount;
             $data['validity_duration'] = $fee->duration;
+            $data['fee_text'] = $fee->amount;
 
             $simat->update($data);
 
@@ -205,6 +232,7 @@ class SimatController extends Controller
             return back()->withInput()->with('error', 'حدث خطأ أثناء التحديث: ' . $e->getMessage());
         }
     }
+
 
 
     public function destroy(Simat $simat): RedirectResponse

@@ -1,9 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-
     <div class="ml-4 mr-4">
-
         @if (session('error'))
             <div class="alert alert-danger">{{ session('error') }}</div>
         @endif
@@ -50,10 +48,10 @@
                     <label>الجنسية:</label>
                     <input type="text" id="nationalitySearchInput" class="form-control" placeholder="ابحث عن الجنسية..."
                         autocomplete="off" value="{{ old('nationality', $simat->nationality) }}">
-
                     <input type="hidden" name="nationality" id="selectedNationalityName"
                         value="{{ old('nationality', $simat->nationality) }}">
-                    <input type="hidden" id="selectedNationalityId" value="{{ old('nationality_id') ?? '' }}">
+                    <input type="hidden" name="selected_nationality_id" id="selectedNationalityId"
+                        value="{{ old('selected_nationality_id') }}">
 
                     <ul id="nationalityList" class="list-group position-absolute w-100"
                         style="z-index: 1000; max-height: 200px; overflow-y: auto; display: none;">
@@ -102,11 +100,13 @@
             const hiddenInputName = document.getElementById('selectedNationalityName');
             const hiddenInputId = document.getElementById('selectedNationalityId');
 
-            // تعبئة الاسم إذا كان هناك قيمة محفوظة
             const selectedName = hiddenInputName.value;
             if (selectedName) {
                 const selectedItem = Array.from(items).find(item => item.textContent.trim() === selectedName.trim());
-                if (selectedItem) input.value = selectedItem.textContent;
+                if (selectedItem) {
+                    input.value = selectedItem.textContent;
+                    hiddenInputId.value = selectedItem.dataset.id;
+                }
             }
 
             input.addEventListener('input', function () {
@@ -129,6 +129,7 @@
                     hiddenInputId.value = this.dataset.id;
                     list.style.display = 'none';
                     input.blur();
+                    setTimeout(filterFees, 100);
                 });
             });
 
@@ -147,8 +148,6 @@
             const nationalityHiddenInput = document.getElementById('selectedNationalityId');
             const visaTypeSelect = document.getElementById('visa_type');
             const feeSelect = document.getElementById('fee_select');
-
-            // القيمة القديمة للرسوم (لتحديد الخيار المحدد مسبقاً)
             const oldFeeId = "{{ old('fee_id', $simat->fee_id ?? '') }}";
 
             function filterFees() {
@@ -194,28 +193,10 @@
                 }
             }
 
-            // عند تغيير نوع السمة
             visaTypeSelect.addEventListener('change', filterFees);
-
-            // عند اختيار جنسية من القائمة
-            document.querySelectorAll('.nationality-item').forEach(item => {
-                item.addEventListener('click', function () {
-                    setTimeout(filterFees, 100);
-                });
-            });
-
-            // عند تحميل الصفحة، إذا كانت القيم موجودة مسبقاً
             if (nationalityHiddenInput.value && visaTypeSelect.value) {
                 filterFees();
-            } else {
-                feeSelect.disabled = true;
             }
         });
     </script>
-
-    <!-- Select2 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <!-- Select2 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
 @endsection

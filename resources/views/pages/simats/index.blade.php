@@ -5,7 +5,9 @@
     <div class="d-flex justify-content-between align-items-center mb-1">
         <h1 class="mb-0">قائمة السمات</h1>
         <div>
-            <a href="{{ route('simats.create') }}" class="btn btn-primary">إضافة سمة</a>
+            @if (auth()->user()->hasRole('Simats'))
+                <a href="{{ route('simats.create') }}" class="btn btn-primary">إضافة سمة</a>
+            @endif
             @if (auth()->user()->hasRole('Super Admin'))
                 <button id="exportExcel" class="btn btn-success ms-1">
                     <i class="fa fa-file-excel"></i> تصدير إلى Excel
@@ -89,10 +91,10 @@
                         <td>{{ $simat->country_code }}</td>
                         <td>{{ $simat->labor_fee }}</td>
                         <td>
-                                                            <a href="{{ route('simats.receipt', $simat->id) }}" target="_blank"
-                                    class="btn btn-sm btn-secondary mt-1">
-                                    طباعة إيصال
-                                </a>
+                            <a href="{{ route('simats.receipt', $simat->id) }}" target="_blank"
+                                class="btn btn-sm btn-secondary mt-1">
+                                طباعة إيصال
+                            </a>
                             @if (auth()->user()->hasRole('Super Admin'))
                                 <a href="{{ route('simats.edit', $simat) }}" class="btn btn-sm btn-info">تعديل</a>
 

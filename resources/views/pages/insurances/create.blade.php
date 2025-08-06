@@ -8,8 +8,6 @@
                 {{ session('error') }}
             </div>
         @endif
-
-
         <form action="{{ route('insurances.store') }}" method="POST" id="insurance-form">
             @csrf
             <div class="row mb-2">
@@ -17,17 +15,19 @@
                     <label class="form-label">اسم السائق</label>
                     <input type="text" name="name" class="form-control" required>
                 </div>
-
                 <div class="col-md-3">
                     <label class="form-label">نوع المركبة</label>
                     <select name="vehicle_type" id="vehicle_type" class="form-control" required>
-                        <option value="">-- اختر النوع --</option>
-                        <option value="سيارة خاصة">سيارة خاصة</option>
-                        <option value="سيارة عمومية">سيارة عمومية</option>
-                        <option value="حافلة عمومي">حافلة عمومي</option>
-                        <option value="فان مغلقة">فان مغلقة</option>
-                        <option value="بولمان">بولمان</option>
-                        <option value="شحن">شحن</option>
+                        @if (auth()->user()->hasRole('Tourist Insurance'))
+                            <option value="">-- اختر النوع --</option>
+                            <option value="سيارة خاصة">سيارة خاصة</option>
+                            <option value="سيارة عمومية">سيارة عمومية</option>
+                            <option value="حافلة عمومي">حافلة عمومي</option>
+                            <option value="فان مغلقة">فان مغلقة</option>
+                            <option value="بولمان">بولمان</option>
+                        @elseif (auth()->user()->hasRole('Cargo Insurance'))
+                            <option value="شحن">شحن</option>
+                        @endif
                     </select>
                 </div>
 

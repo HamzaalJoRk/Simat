@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html class="loading" lang="en" data-textdirection="rtl">
-<!-- BEGIN: Head-->
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -14,7 +13,6 @@
     <title>نظام السمات</title>
     <link rel="apple-touch-icon" href="{{asset('newlogo.png')}}">
     <link rel="shortcut icon" type="image/x-icon" href="{{asset('newlogo.png')}}">
-    <!-- <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500;1,600" rel="stylesheet"> -->
 
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
 
@@ -24,13 +22,11 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 
-    <!-- BEGIN: Vendor CSS-->
+
     <link rel="stylesheet" type="text/css" href="{{ asset('/app-assets/vendors/css/vendors-rtl.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('/app-assets/vendors/css/charts/apexcharts.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('/app-assets/vendors/css/extensions/toastr.min.css') }}">
-    <!-- END: Vendor CSS-->
 
-    <!-- BEGIN: Theme CSS-->
     <link rel="stylesheet" type="text/css" href="{{ asset('/app-assets/css-rtl/bootstrap.css')}}">
     <link rel="stylesheet" type="text/css" href="{{ asset('/app-assets/css-rtl/bootstrap-extended.css')}}">
     <link rel="stylesheet" type="text/css" href="{{ asset('/app-assets/css-rtl/colors.css')}}">
@@ -39,24 +35,22 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('/app-assets/css-rtl/themes/bordered-layout.css')}}">
     <link rel="stylesheet" type="text/css" href="{{ asset('/app-assets/css-rtl/themes/semi-dark-layout.css')}}">
 
-    <!-- Select2 CSS -->
+
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
 
 
-    <!-- BEGIN: Page CSS-->
+
     <link rel="stylesheet" type="text/css"
         href="{{ asset('/app-assets/css-rtl/core/menu/menu-types/vertical-menu.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('/app-assets/css-rtl/pages/dashboard-ecommerce.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('/app-assets/css-rtl/plugins/charts/chart-apex.css') }}">
     <link rel="stylesheet" type="text/css"
         href="{{ asset('/app-assets/css-rtl/plugins/extensions/ext-component-toastr.css') }}">
-    <!-- END: Page CSS-->
 
-    <!-- BEGIN: Custom CSS-->
     <link rel="stylesheet" type="text/css" href="{{ asset('/app-assets/css-rtl/custom-rtl.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('/assets/css/style-rtl.css') }}">
-    <!-- END: Custom CSS-->
+
     <style>
         .navigation-main .nav-item a {
             font-family: 'Cairo', sans-serif !important;
@@ -68,14 +62,10 @@
         }
     </style>
 </head>
-<!-- END: Head-->
-
-<!-- BEGIN: Body-->
 
 <body class="vertical-layout vertical-menu-modern  navbar-floating footer-static  " data-open="click"
     data-menu="vertical-menu-modern" data-col="">
 
-    <!-- BEGIN: Header-->
     <nav
         class="header-navbar navbar navbar-expand-lg align-items-center floating-nav navbar-light navbar-shadow container-xxl">
         <div class="navbar-container d-flex content">
@@ -125,10 +115,7 @@
                         data-feather="alert-circle"></span><span>No results found.</span></div>
             </a></li>
     </ul>
-    <!-- END: Header-->
 
-
-    <!-- BEGIN: Main Menu-->
     <div class="main-menu menu-fixed menu-light menu-accordion menu-shadow" data-scroll-to-active="true">
         <div class="navbar-header">
             <ul class="nav navbar-nav flex-row">
@@ -149,16 +136,15 @@
         <div class="main-menu-content">
             <ul class="navigation navigation-main">
 
-                @if (auth()->user()->hasRole('Simats') || auth()->user()->hasRole('Super Admin'))
-                    {{-- السمات --}}
+                @if (auth()->user()->hasRole('Simats') || auth()->user()->hasRole('Super Admin') || auth()->user()->hasRole('Admin'))
                     <li class="nav-item">
                         <a class="d-flex align-items-center" href="{{ route('simats.index') }}">
                             <i class="fa-solid fa-money-bill-wave me-1"></i>
                             <span class="menu-title text-truncate">السمات</span>
                         </a>
                     </li>
-
-                    {{-- إضافة سمة --}}
+                @endif
+                @if (auth()->user()->hasRole('Simats'))
                     <li class="nav-item">
                         <a class="d-flex align-items-center" href="{{ route('simats.create') }}">
                             <i class="fas fa-plus me-1"></i>
@@ -167,16 +153,23 @@
                     </li>
                 @endif
 
-                @if (auth()->user()->hasRole('Insurances') || auth()->user()->hasRole('Super Admin'))
-                    {{-- التأمينات --}}
+                @if (auth()->user()->hasRole('Tourist Insurance') || auth()->user()->hasRole('Super Admin') || auth()->user()->hasRole('Admin'))
                     <li class="nav-item">
-                        <a class="d-flex align-items-center" href="{{ route('insurances.index') }}">
+                        <a class="d-flex align-items-center" href="{{ route('insurances.indexTourist') }}">
                             <i class="fa-solid fa-car-burst me-1"></i>
-                            <span class="menu-title text-truncate">التأمينات</span>
+                            <span class="menu-title text-truncate">تأمينات السياحي</span>
                         </a>
                     </li>
-
-                    {{-- إضافة تأمين --}}
+                @endif
+                @if (auth()->user()->hasRole('Cargo Insurance') || auth()->user()->hasRole('Super Admin') || auth()->user()->hasRole('Admin'))
+                    <li class="nav-item">
+                        <a class="d-flex align-items-center" href="{{ route('insurances.indexCargo') }}">
+                            <i class="fa-solid fa-car-burst me-1"></i>
+                            <span class="menu-title text-truncate">تأمينات الشحن</span>
+                        </a>
+                    </li>
+                @endif
+                @if (auth()->user()->hasRole('Cargo Insurance') || auth()->user()->hasRole('Tourist Insurance'))
                     <li class="nav-item">
                         <a class="d-flex align-items-center" href="{{ route('insurances.create') }}">
                             <i class="fas fa-plus me-1"></i>
@@ -186,7 +179,6 @@
                 @endif
 
                 @if (auth()->user()->hasRole('Super Admin'))
-                    {{-- الجنسيات --}}
                     <li class="nav-item">
                         <a class="d-flex align-items-center" href="{{ route('nationalities.index') }}">
                             <i class="fa-solid fa-flag me-1"></i>
@@ -194,7 +186,6 @@
                         </a>
                     </li>
 
-                    {{-- المستخدمين --}}
                     <li class="nav-item">
                         <a class="d-flex align-items-center" href="{{ route('users.index') }}">
                             <i class="fa-solid fa-user-group me-1"></i>
@@ -202,7 +193,6 @@
                         </a>
                     </li>
 
-                    {{-- الصلاحيات --}}
                     <li class="nav-item">
                         <a class="d-flex align-items-center" href="{{ route('roles.index') }}">
                             <i class="fa-solid fa-circle-minus me-1"></i>
@@ -211,12 +201,9 @@
                     </li>
                 @endif
             </ul>
-
         </div>
     </div>
-    <!-- END: Main Menu-->
 
-    <!-- BEGIN: Content-->
     <div class="app-content content ">
         <div class="content-overlay"></div>
         <div class="header-navbar-shadow"></div>
@@ -226,12 +213,12 @@
             </div>
         </div>
     </div>
-    <!-- END: Content-->
+
 
     <div class="sidenav-overlay"></div>
     <div class="drag-target"></div>
 
-    <!-- BEGIN: Footer-->
+
     <footer class="footer footer-static footer-light" style="background-color: white;">
         <p class=" mb-0"><span class="float-md-start d-none d-md-block">Copyright © 2025 الهيئة العامة للمنافذ البرية
                 والبحرية . جميع الحقوق محفوظة.<a class="ms-25" href="{{asset('newlogo.png')}}" target="_blank"> </a>
@@ -241,38 +228,29 @@
                     width="20"></span></p>
     </footer>
     <button class="btn btn-primary btn-icon scroll-top" type="button"><i data-feather="arrow-up"></i></button>
-    <!-- END: Footer-->
 
 
-    <!-- Select2 JS -->
+
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-    <!-- BEGIN: Vendor JS-->
-    <script src="{{ asset('/app-assets/vendors/js/vendors.min.js') }}"></script>
-    <!-- BEGIN Vendor JS-->
 
-    <!-- BEGIN: Page Vendor JS-->
+    <script src="{{ asset('/app-assets/vendors/js/vendors.min.js') }}"></script>
+
+
     <script src="{{ asset('/app-assets/vendors/js/charts/apexcharts.min.js') }}"></script>
     <script src="{{ asset('/app-assets/vendors/js/extensions/toastr.min.js') }}"></script>
-    <!-- END: Page Vendor JS-->
 
-    <!-- BEGIN: Theme JS-->
+
     <script src="{{ asset('/app-assets/js/core/app-menu.js') }}"></script>
     <script src="{{ asset('/app-assets/js/core/app.js') }}"></script>
-    <!-- END: Theme JS-->
 
-    <!-- BEGIN: Page JS-->
     <script src="{{ asset('/app-assets/js/scripts/pages/dashboard-ecommerce.js') }}"></script>
-    <!-- END: Page JS-->
 
-    <!-- BEGIN: Page Vendor JS-->
     <script src="../../../app-assets/vendors/js/extensions/sweetalert2.all.min.js"></script>
     <script src="../../../app-assets/vendors/js/extensions/polyfill.min.js"></script>
-    <!-- END: Page Vendor JS-->
 
-    <!-- BEGIN: Page JS-->
     <script src="../../../app-assets/js/scripts/extensions/ext-component-sweet-alerts.js"></script>
-    <!-- END: Page JS-->
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
@@ -288,10 +266,8 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // الحصول على مسار الصفحة الحالي
             var currentPath = window.location.pathname;
 
-            // الحصول على جميع عناصر القائمة
             var menuItems = document.querySelectorAll(".navigation-main .nav-item a");
 
             menuItems.forEach(function (item) {
@@ -305,6 +281,5 @@
     </script>
     @stack('scripts')
 </body>
-<!-- END: Body-->
 
 </html>
