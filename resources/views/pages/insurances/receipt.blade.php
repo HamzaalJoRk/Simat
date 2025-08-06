@@ -151,7 +151,7 @@
                 </tr>
                 <tr>
                     <td>الرسوم رقماً</td>
-                    <td colspan="3">{{ number_format($insurance->amount_numeric, 2) }} $</td>
+                    <td style="color: red" colspan="3">{{ number_format($insurance->amount_numeric, 2) }} $</td>
                 </tr>
                 <tr>
                     <td>ملاحظات</td>
