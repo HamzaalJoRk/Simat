@@ -105,7 +105,7 @@
                                 <td>{{ number_format($insurance->amount_numeric, 2) }}</td>
                                 <td>{{ $insurance->notes ?? 'لا يوجد' }}</td>
                                 <td>
-                                    <a href="{{ route('insurances.receipt', $simat->id) }}" target="_blank"
+                                    <a href="{{ route('insurances.receipt', $insurance->id) }}" target="_blank"
                                         class="btn btn-sm btn-secondary mt-1">
                                         طباعة إيصال
                                     </a>
