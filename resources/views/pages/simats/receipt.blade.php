@@ -16,9 +16,19 @@
             }
         }
 
+        @font-face {
+            font-family: 'TheYearOfTheCamel';
+            src: url('{{ asset('fonts/TheYearofTheCamel-ExtraBold.otf') }}') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+
+
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'TheYearOfTheCamel', sans-serif;
             direction: rtl;
+            font-weight: bold;
             margin: 1mm;
         }
 
@@ -158,7 +168,7 @@
                 </tr>
                 <tr>
                     <td>رسوم السمة / Fees</td>
-                    <td>{{ $simat->fee_number }} $</td>
+                    <td style="color: red">{{ $simat->fee_number }} $</td>
                     <td>رمزها</td>
                     <td>{{ $simat->country_code }}</td>
                 </tr>

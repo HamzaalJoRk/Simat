@@ -16,10 +16,18 @@
             }
         }
 
+        @font-face {
+            font-family: 'TheYearOfTheCamel';
+            src: url('{{ asset('fonts/TheYearofTheCamel-ExtraBold.otf') }}') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'TheYearOfTheCamel', sans-serif;
             direction: rtl;
             margin: 1mm;
+            font-weight: bold;
         }
 
         .copy {
