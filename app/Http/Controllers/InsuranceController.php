@@ -148,25 +148,33 @@ class InsuranceController extends Controller
 
     public function update(Request $request, $id)
     {
-        $insurance = Insurance::findOrFail($id);
+        try {
+            $insurance = Insurance::findOrFail($id);
 
-        $request->validate([
-            'name' => 'required|string',
-            'vehicle_type' => 'required|string',
-            'model' => 'required|string',
-            'chassis_number' => 'required|string',
-            'plate_number' => 'required|string',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date',
-            'duration' => 'required|string',
-            'fee_number' => 'required|numeric',
-            'fee_text' => 'required|string',
-            'notes' => 'nullable|string',
-        ]);
+            $validatedData = $request->validate([
+                'name' => 'required|string',
+                'vehicle_type' => 'required|string',
+                'model' => 'required|string',
+                'chassis_number' => 'required|string',
+                'plate_number' => 'required|string',
+                'duration' => 'required|string',
+                'amount_numeric' => 'required|numeric',
+                'notes' => 'nullable|string',
+            ]);
 
-        $insurance->update($request->all());
-        return redirect()->route('insurances.index')->with('success', 'تم التحديث بنجاح');
+            $validatedData['amount_written'] = $validatedData['amount_numeric'];
+
+            $insurance->update($validatedData);
+            if ($insurance->type == 'Tourist') {
+                return redirect()->route('insurances.indexTourist')->with('success', 'تم التحديث بنجاح');
+            } elseif ($insurance->type == 'Cargo') {
+                return redirect()->route('insurances.indexCargo')->with('success', 'تم التحديث بنجاح');
+            }
+        } catch (\Exception $e) {
+            return back()->with('error', 'حدث خطأ أثناء التحديث: ' . $e->getMessage());
+        }
     }
+
 
     public function destroy($id)
     {
