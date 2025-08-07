@@ -235,9 +235,22 @@ class SimatController extends Controller
 
 
 
-    public function destroy(Simat $simat): RedirectResponse
+    public function destroy($id): RedirectResponse
     {
-        $simat->delete();
-        return to_route('simats.index')->with('success', 'تم الحذف بنجاح');
+        try {
+            $simat = Simat::findOrFail($id);
+            $deletedSerial = (int) $simat->serial_number;
+
+            $simat->delete();
+
+            Simat::whereNotNull('serial_number')
+                ->where('serial_number', '>', $deletedSerial)
+                ->decrement('serial_number');
+
+            return to_route('simats.index')->with('success', 'تم الحذف بنجاح');
+
+        } catch (\Exception $e) {
+            return back()->with('error', 'حدث خطأ أثناء الحذف: ' . $e->getMessage());
+        }
     }
 }

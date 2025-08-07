@@ -178,8 +178,23 @@ class InsuranceController extends Controller
 
     public function destroy($id)
     {
-        $insurance = Insurance::findOrFail($id);
-        $insurance->delete();
-        return redirect()->route('insurances.index')->with('success', 'تم الحذف بنجاح');
+        try {
+            $insurance = Insurance::findOrFail($id);
+
+            $deletedSerial = $insurance->serial_number;
+            $type = $insurance->type;
+            $insurance->delete();
+
+            Insurance::where('serial_number', '>', $deletedSerial)
+                ->decrement('serial_number');
+            if ($type == 'Tourist') {
+                return redirect()->route('insurances.indexTourist')->with('success', 'تم التحديث بنجاح');
+            } elseif ($type == 'Cargo') {
+                return redirect()->route('insurances.indexCargo')->with('success', 'تم التحديث بنجاح');
+            }
+        } catch (\Exception $e) {
+            return back()->with('error', 'حدث خطأ أثناء الحذف: ' . $e->getMessage());
+        }
     }
+
 }
