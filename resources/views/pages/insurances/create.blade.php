@@ -37,15 +37,15 @@
                 </div>
 
                 <div class="col-md-3">
-                    <label class="form-label">رقم الشاسيه</label>
-                    <input type="text" name="chassis_number" class="form-control" required>
+                    <label class="form-label">رقم اللوحة</label>
+                    <input type="text" name="plate_number" class="form-control" required>
                 </div>
             </div>
 
             <div class="row mb-2">
                 <div class="col-md-3">
-                    <label class="form-label">رقم اللوحة</label>
-                    <input type="text" name="plate_number" class="form-control" required>
+                    <label class="form-label">رقم الشاسيه</label>
+                    <input type="text" name="chassis_number" class="form-control" required>
                 </div>
 
                 <div class="col-md-3">
