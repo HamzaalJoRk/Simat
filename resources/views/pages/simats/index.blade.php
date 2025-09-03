@@ -61,6 +61,7 @@
         <table id="simat-table" class="table table-bordered">
             <thead>
                 <tr>
+                    <th>المنشئ</th>
                     <th>الاسم</th>
                     <th>اسم الام</th>
                     <th>الميلاد</th>
@@ -79,6 +80,7 @@
             <tbody>
                 @foreach($simats as $simat)
                     <tr>
+                        <td>{{ $simat->user->name ?? '-' }}</td>
                         <td>{{ $simat->name }}</td>
                         <td>{{ $simat->mother_name }}</td>
                         <td>{{ $simat->birth_date }}</td>

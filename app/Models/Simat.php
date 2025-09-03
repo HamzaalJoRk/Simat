@@ -8,6 +8,7 @@ class Simat extends Model
 {
     protected $fillable = [
         'name',
+        'user_id',
         'mother_name',
         'nationality',
         'birth_date',
@@ -28,6 +29,11 @@ class Simat extends Model
         return $this->belongsTo(Nationality::class);
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     protected static function boot()
     {
         parent::boot();
@@ -46,7 +52,7 @@ class Simat extends Model
         $nextId = $latest ? $latest->id + 1 : 1;
         $startFrom = 5138;
         $serial = $startFrom + $nextId - 1;
-        return str_pad($serial, 6, '0', STR_PAD_LEFT); 
+        return str_pad($serial, 6, '0', STR_PAD_LEFT);
     }
 
 }

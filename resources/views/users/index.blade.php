@@ -3,10 +3,10 @@
 @section('content')
     <h1 class="mb-1"> قائمة المستخدمين</h1>
 
-    <a href="/user-create" class="btn btn-primary mb-2">
+    <a href="/user-create" class="btn btn-primary mb-1">
         اضافة مستخدم
     </a>
-    <table class="table table-bordered mt-4">
+    <table class="table table-bordered mt-1">
         <thead>
             <tr class="flex">
                 <th scope="col">
@@ -35,7 +35,19 @@
                     <td>
                         @if(!empty($user->getRoleNames()))
                             @foreach($user->getRoleNames() as $v)
-                                <label class="badge badge-secondary text-dark">{{ $v }}</label>
+                                <label class="badge badge-secondary text-dark">
+                                    @if ($v == 'Simats')
+                                        موظف سمات
+                                    @elseif ($v == 'Tourist Insurance')
+                                        موظف تأمينات السياحي
+                                    @elseif ($v == 'Cargo Insurance')
+                                        موظف تأمينات الشحن
+                                    @elseif ($v == 'Admin')
+                                        مدير الفئة
+                                    @else
+                                        {{ $v }}
+                                    @endif
+                                </label>
                             @endforeach
                         @endif
                     </td>

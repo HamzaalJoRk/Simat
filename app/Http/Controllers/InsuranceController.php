@@ -13,6 +13,10 @@ class InsuranceController extends Controller
     {
         $query = Insurance::query();
 
+        if (!auth()->user()->hasRole('Super Admin')) {
+            $query->where('user_id', auth()->id());
+        }
+
         if ($request->filled('from_date') && $request->filled('to_date')) {
             $fromDate = Carbon::parse($request->from_date)->startOfDay();
             $toDate = Carbon::parse($request->to_date)->endOfDay();
@@ -119,6 +123,7 @@ class InsuranceController extends Controller
                 'start_date' => $startDate,
                 'end_date' => $endDate,
                 'type' => $type,
+                'user_id' => auth()->user()->id,
                 'duration' => $request->duration,
                 'amount_numeric' => $request->amount_numeric,
                 'amount_written' => $request->amount_numeric,

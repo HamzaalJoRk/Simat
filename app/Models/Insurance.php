@@ -8,6 +8,7 @@ class Insurance extends Model
 {
     protected $fillable = [
         'name',
+        'user_id',
         'vehicle_type',
         'model',
         'chassis_number',
@@ -21,6 +22,11 @@ class Insurance extends Model
         'type',
         'notes'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     protected static function boot()
     {

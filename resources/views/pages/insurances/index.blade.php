@@ -29,7 +29,8 @@
                 <div class="card  bg-success shadow-sm">
                     <div class="card-body">
                         <h5 class="card-title text-white">إجمالي الرسوم</h5>
-                        <h3 class="card-text text-white fw-bold">{{ number_format($insurances->sum('amount_numeric'), 2) }} $</h3>
+                        <h3 class="card-text text-white fw-bold">{{ number_format($insurances->sum('amount_numeric'), 2) }}
+                            $</h3>
                     </div>
                 </div>
             </div>
@@ -63,6 +64,7 @@
                     <thead>
                         <tr>
                             <th>#</th>
+                            <th>المنشئ</th>
                             <th>اسم السائق</th>
                             <th>نوع المركبة</th>
                             <th>الطراز</th>
@@ -91,6 +93,7 @@
                         @foreach($insurances as $insurance)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
+                                <td>{{ $insurance->user->name ?? '-' }}</td>
                                 <td>{{ $insurance->name }}</td>
                                 <td>{{ $insurance->vehicle_type }}</td>
                                 <td>{{ $insurance->model }}</td>
@@ -156,10 +159,10 @@
                             let date = new Date().toLocaleDateString('ar-EG');
                             let dateRow =
                                 `<row r="1">
-                                                <c t="inlineStr" r="A1">
-                                                    <is><t>تاريخ التصدير: ${date}</t></is>
-                                                </c>
-                                            </row>`;
+                                                    <c t="inlineStr" r="A1">
+                                                        <is><t>تاريخ التصدير: ${date}</t></is>
+                                                    </c>
+                                                </row>`;
 
                             sheet.childNodes[0].innerHTML = dateRow + sheet.childNodes[0].innerHTML;
                         }

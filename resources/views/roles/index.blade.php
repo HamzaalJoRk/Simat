@@ -2,17 +2,11 @@
 
 @section('content')
     <h1 class="mb-1">قائمة الصلاحيات</h1>
-    <a href="/user-create" class="btn btn-primary mb-2">
-        اضافة مستخدم
-    </a>
-    <table class="table mt-4">
+    <table class="table mt-1">
         <thead>
             <tr>
                 <th scope="col">
                     الصلاحية
-                </th>
-                <th scope="col">
-                    اجراء
                 </th>
             </tr>
         </thead>
@@ -20,22 +14,17 @@
             @foreach($roles as $role)
                 <tr>
                     <td>
-                        {{ $role->name }}
-                    </td>
-                    <td>
-                        <div>
-                            <a href="{{ route('roles.edit', ['role' => $role->id]) }}" class="btn btn-primary">
-                                تعديل
-                            </a>
-                            <form method="POST" action="{{ route('roles.destroy', $role->id) }}"
-                                onsubmit="return confirm('Are you sure you want to delete this role?');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger">
-                                    حذف
-                                </button>
-                            </form>
-                        </div>
+                        @if ($role->name == 'Simats')
+                            موظف سمات
+                        @elseif ($role->name == 'Tourist Insurance')
+                            موظف تأمينات السياحي
+                        @elseif ($role->name == 'Cargo Insurance')
+                            موظف تأمينات الشحن
+                        @elseif ($role->name == 'Admin')
+                            مدير الفئة
+                        @else
+                            {{ $role->name }}
+                        @endif
                     </td>
                 </tr>
             @endforeach

@@ -14,11 +14,14 @@ use NumberToWords\NumberToWords;
 
 class SimatController extends Controller
 {
-
-
     public function index(Request $request)
     {
         $query = Simat::query();
+
+        if (!auth()->user()->hasRole('Super Admin')) {
+            $query->where('user_id', auth()->id());
+        }
+
 
         if ($request->filled('today') && $request->today == '1') {
             $query->whereDate('created_at', Carbon::today());
@@ -134,6 +137,7 @@ class SimatController extends Controller
             $data['validity_duration'] = $duration;
             $data['fee_text'] = $fee->amount;
             $data['nationality'] = $nationality->name;
+            $data['user_id'] = auth()->id();
 
             $simat = Simat::create($data);
 

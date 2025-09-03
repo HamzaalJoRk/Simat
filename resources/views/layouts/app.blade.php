@@ -60,6 +60,16 @@
         body {
             font-family: 'Cairo', sans-serif;
         }
+
+
+        .main-menu.menu-light .navigation>li.active>a {
+            background: -webkit-linear-gradient(208deg, #3c8dbc, rgba(115, 103, 240, 0.7));
+            background: linear-gradient(-118deg, #3c8dbc, #3c8dbc);
+            box-shadow: 0 0 10px 1px #3c8dbc;
+            color: #FFFFFF;
+            font-weight: 400;
+            border-radius: 4px;
+        }
     </style>
 </head>
 
@@ -81,8 +91,25 @@
                 </ul>
             </div>
             <ul class="nav navbar-nav align-items-center ms-auto">
-                <li class="nav-item d-none d-lg-block"><a class="nav-link nav-link-style"><i class="ficon"
-                            data-feather="moon"></i></a></li>
+                <li class="nav-item d-none d-lg-block">
+                    @foreach(auth()->user()->getRoleNames() as $v)
+                        <h2 style="font-weight: bold;font-family: 'Cairo', sans-serif;"
+                            class="badge badge-secondary text-dark">
+                            {{ auth()->user()->name }} -
+                            @if ($v == 'Simats')
+                                موظف سمات
+                            @elseif ($v == 'Tourist Insurance')
+                                موظف تأمينات السياحي
+                            @elseif ($v == 'Cargo Insurance')
+                                موظف تأمينات الشحن
+                            @elseif ($v == 'Admin')
+                                مدير الفئة
+                            @else
+                                {{ $v }}
+                            @endif
+                        </h2>
+                    @endforeach
+                </li>
                 <li class="nav-item dropdown dropdown-user"><a class="nav-link dropdown-toggle dropdown-user-link"
                         id="dropdown-user" href="#" data-bs-toggle="dropdown" aria-haspopup="true"
                         aria-expanded="false">
@@ -135,7 +162,14 @@
         <div class="shadow-bottom"></div>
         <div class="main-menu-content">
             <ul class="navigation navigation-main">
-
+                @if (auth()->user()->hasRole('Super Admin') || auth()->user()->hasRole('Admin'))
+                    <li class="nav-item">
+                        <a class="d-flex align-items-center" href="{{ route('dashboard') }}">
+                            <i class="fa-solid fa-money-bill-wave me-1"></i>
+                            <span class="menu-title text-truncate">لوحة التحكم</span>
+                        </a>
+                    </li>
+                @endif
                 @if (auth()->user()->hasRole('Simats') || auth()->user()->hasRole('Super Admin') || auth()->user()->hasRole('Admin'))
                     <li class="nav-item">
                         <a class="d-flex align-items-center" href="{{ route('simats.index') }}">
